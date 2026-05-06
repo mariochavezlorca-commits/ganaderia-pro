@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>🐄 GanadApp Ultra Pro</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐄</text></svg>">
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icono-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="assets/icono-512.png">
+
+<!-- Para PWA -->
+<link rel="manifest" href="manifest.json">
+
+</head>
+<body>
+
+<!-- Pantalla de autenticación -->
+<div id="authScreen" class="login-screen">
+    <div class="login-box">
+        <div style="text-align:center;font-size:3rem;">🐄</div>
+        <h2 style="text-align:center;color:#1b4332;">GanadApp Ultra</h2>
+        <div class="form-group"><input type="email" id="authEmail" placeholder="Correo electrónico"></div>
+        <div class="form-group"><input type="password" id="authPassword" placeholder="Contraseña"></div>
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <button class="btn" id="btnLogin" style="flex:1;">Ingresar</button>
+            <button class="btn btn-outline" id="btnRegister" style="flex:1;">Registrarse</button>
+        </div>
+        <p style="font-size:0.8rem; text-align:center; color:#888;">Premium 50 MXN/mes · Datos en la nube</p>
+    </div>
+</div>
+
+<!-- Aplicación principal (oculta hasta login) -->
+<div id="appContainer" style="display:none; width:100%;">
+    <button class="btn-hamburguesa" id="btnHamburguesa">☰</button>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="logo">🐄</span>
+            <h2>GanadApp</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <button class="activo" data-pagina="dashboard">📊 Dashboard</button>
+            <button data-pagina="inventario">🐮 Inventario</button>
+            <button data-pagina="lotes">🐂 Lotes</button>
+            <button data-pagina="nacimientos">🐣 Nacimientos</button>
+            <button data-pagina="peso">⚖️ Pesaje</button>
+            <button data-pagina="vacunacion">💉 Vacunación</button>
+            <button data-pagina="alimentacion">🌾 Alimentación</button>
+            <button data-pagina="notas">📝 Notas</button>
+            <button data-pagina="clima">🌤️ Clima</button>
+            <button data-pagina="configuracion">⚙️ Config</button>
+        </nav>
+        <div class="sidebar-footer" id="sidebarFooter">
+            <span id="userEmailDisplay"></span>
+            <button class="btn btn-sm btn-danger" id="btnLogout">Cerrar sesión</button>
+        </div>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+        <div class="top-bar">
+            <h1 id="tituloPagina">📊 Dashboard</h1>
+            <div class="reloj" id="fechaHora"></div>
+        </div>
+
+        <!-- Dashboard -->
+        <section class="pagina activa" id="pagina-dashboard">
+            <div class="cards-grid" id="cardsDashboard"></div>
+            <div class="contenedor">
+                <div class="contenedor-header"><h3>🔔 Atención Requerida</h3></div>
+                <table><thead><tr><th>Nombre</th><th>Cat.</th><th>Estado</th><th>Lote</th></tr></thead><tbody id="tablaAtencion"></tbody></table>
+            </div>
+        </section>
+
+        <!-- Inventario -->
+        <section class="pagina" id="pagina-inventario">
+            <div class="contenedor">
+                <div class="contenedor-header"><h3>🐮 Inventario</h3><button class="btn" id="btnAgregarAnimal">➕ Animal</button></div>
+                <div class="filtros">
+                    <input type="search" id="buscarNombre" placeholder="🔍 Buscar...">
+                    <select id="filtroCategoria"><option value="todas">Todas</option><option value="vaca">Vacas</option><option value="toro">Toros</option><option value="cria">Crías</option><option value="novillo">Novillos</option></select>
+                    <select id="filtroEstado"><option value="todos">Estado</option><option value="saludable">Saludable</option><option value="atencion">Atención</option><option value="critico">Crítico</option></select>
+                </div>
+                <table><thead><tr><th>ID</th><th>Nombre</th><th>Cat.</th><th>Raza</th><th>Peso</th><th>Estado</th><th>Lote</th><th></th></tr></thead><tbody id="tablaInventario"></tbody></table>
+                <div class="paginacion" id="paginadorInventario"></div>
+            </div>
+        </section>
+
+        <!-- Lotes -->
+        <section class="pagina" id="pagina-lotes">
+            <div class="contenedor"><div class="contenedor-header"><h3>🐂 Lotes</h3><button class="btn" id="btnAgregarLote">➕ Lote</button></div>
+            <table><thead><tr><th>Nombre</th><th>Descripción</th><th>Ubicación</th><th>Animales</th><th></th></tr></thead><tbody id="tablaLotes"></tbody></table></div>
+        </section>
+
+        <!-- Nacimientos -->
+        <section class="pagina" id="pagina-nacimientos">
+            <div class="contenedor"><div class="contenedor-header"><h3>🐣 Nacimientos</h3><button class="btn" id="btnRegistrarNacimiento">➕ Nacimiento</button></div>
+            <table><thead><tr><th>Fecha</th><th>Madre</th><th>Padre</th><th>Sexo</th><th>Peso</th><th>Cría</th><th></th></tr></thead><tbody id="tablaNacimientos"></tbody></table></div>
+        </section>
+
+        <!-- Pesos -->
+        <section class="pagina" id="pagina-peso"><div class="contenedor"><div class="contenedor-header"><h3>⚖️ Pesajes</h3><button class="btn" id="btnRegistrarPeso">➕ Pesaje</button></div>
+        <table><thead><tr><th>Animal</th><th>Fecha</th><th>Peso</th><th>Obs.</th><th></th></tr></thead><tbody id="tablaPesos"></tbody></table></div></section>
+
+        <!-- Vacunación -->
+        <section class="pagina" id="pagina-vacunacion"><div class="contenedor"><div class="contenedor-header"><h3>💉 Vacunas</h3><button class="btn" id="btnRegistrarVacuna">➕ Vacuna</button></div>
+        <table><thead><tr><th>Animal</th><th>Fecha</th><th>Vacuna</th><th>Dosis</th><th>Próx.</th><th></th></tr></thead><tbody id="tablaVacunas"></tbody></table></div></section>
+
+        <!-- Alimentación -->
+        <section class="pagina" id="pagina-alimentacion"><div class="contenedor"><div class="contenedor-header"><h3>🌾 Alimentación</h3><button class="btn" id="btnRegistrarAlimentacion">➕ Alim.</button></div>
+        <table><thead><tr><th>Animal</th><th>Fecha</th><th>Tipo</th><th>Cant.</th><th></th></tr></thead><tbody id="tablaAlimentacion"></tbody></table></div></section>
+
+        <!-- Notas -->
+        <section class="pagina" id="pagina-notas"><div class="contenedor"><div class="contenedor-header"><h3>📝 Notas</h3><button class="btn" id="btnAgregarNota">➕ Nota</button></div>
+        <table><thead><tr><th>Fecha</th><th>Categoría</th><th>Nota</th><th></th></tr></thead><tbody id="tablaNotas"></tbody></table></div></section>
+
+        <!-- Clima -->
+        <section class="pagina" id="pagina-clima"><div class="contenedor"><div class="contenedor-header"><h3>🌤️ Clima</h3><button class="btn" id="btnRegistrarClima">➕ Registro</button></div>
+        <table><thead><tr><th>Fecha</th><th>Temp.</th><th>Hum.</th><th>Condición</th><th></th></tr></thead><tbody id="tablaClima"></tbody></table></div></section>
+
+        <!-- Configuración -->
+        <section class="pagina" id="pagina-configuracion">
+            <div class="contenedor" style="padding:22px;">
+                <h3>⚙️ Configuración</h3>
+                <p>Plan: <strong id="planActual">Gratis</strong></p>
+                <div class="form-group"><label>🔑 Código Premium</label><input id="codigoPremium" placeholder="PREMIUM50"></div>
+                <button class="btn btn-premium" id="btnActivarPremium">✨ Activar Premium</button>
+                <hr style="margin:20px 0;">
+                <button class="btn btn-outline" id="btnGenerarDemo">📦 Generar 310 demo</button>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Modal genérico -->
+<div class="modal-overlay oculto" id="modalOverlay"><div class="modal" id="modalContenido"></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/baseDatos.js"></script>
+<script src="js/premium.js"></script>
+<script src="js/notas.js"></script>
+<script src="js/registros.js"></script>
+<script src="js/nacimientos.js"></script>
+<script src="js/lotes.js"></script>
+<script src="js/inventario.js"></script>
+<script src="js/app.js"></script>
+
+<!-- Registro del Service Worker -->
+<script>
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').then(reg => console.log('SW registrado'));
+    });
+}
+</script>
+</body>
+</html>
